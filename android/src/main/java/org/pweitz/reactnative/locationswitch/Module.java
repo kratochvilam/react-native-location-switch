@@ -24,17 +24,29 @@ public class Module extends ReactContextBaseJavaModule implements ActivityEventL
 
     @ReactMethod
     public void isLocationEnabled(Callback successCallback, Callback errorCallback) {
-        LocationSwitch.getInstance().isLocationEnabled(getCurrentActivity(),
-                successCallback, errorCallback);
+        Activity currentActivity = getCurrentActivity();
+
+        if (currentActivity == null) {
+            errorCallback.invoke();
+            return;
+        }
+        
+        LocationSwitch.getInstance().isLocationEnabled(currentActivity, successCallback, errorCallback);
     }
 
     @ReactMethod
     public void enableLocationService(int interval, boolean requestHighAccuracy,
                                       Callback successCallback, Callback errorCallback) {
-        LocationSwitch.getInstance().setup(
-                successCallback, errorCallback, interval, requestHighAccuracy);
-        LocationSwitch.getInstance().displayLocationSettingsRequest(
-                getCurrentActivity());
+
+        Activity currentActivity = getCurrentActivity();
+
+        if (currentActivity == null) {
+            errorCallback.invoke();
+            return;
+        }
+
+        LocationSwitch.getInstance().setup(successCallback, errorCallback, interval, requestHighAccuracy);
+        LocationSwitch.getInstance().displayLocationSettingsRequest(currentActivity);
     }
 
 
